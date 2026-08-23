@@ -30,15 +30,14 @@ static bool is_64dd_connected (void) {
 }
 
 /**
- * @brief Create the saves subdirectory.
+ * @brief Create the parent directory for a save path.
  * 
- * @param path Pointer to the path structure.
+ * @param path Pointer to the save path structure.
  * @return true if an error occurred, false otherwise.
  */
-static bool create_saves_subdirectory (path_t *path) {
+static bool create_save_directory (path_t *path) {
     path_t *save_folder_path = path_clone(path);
     path_pop(save_folder_path);
-    path_push(save_folder_path, SAVE_DIRECTORY_NAME);
     bool error = directory_create(path_get(save_folder_path));
     path_free(save_folder_path);
     return error;
@@ -82,7 +81,7 @@ char *cart_load_convert_error_message (cart_load_err_t err) {
         case CART_LOAD_ERR_EMU_NOT_FOUND: return "Required emulator file was not found";
         case CART_LOAD_ERR_EMU_LOAD_FAIL: return "Error occurred during emulator ROM loading";
         case CART_LOAD_ERR_EMU_ROM_LOAD_FAIL: return "Error occurred during emulated ROM loading";
-        case CART_LOAD_ERR_CREATE_SAVES_SUBDIR_FAIL: return "Couldn't create saves subdirectory";
+        case CART_LOAD_ERR_CREATE_SAVE_DIRECTORY_FAIL: return "Couldn't create save directory";
         case CART_LOAD_ERR_EXP_PAK_NOT_FOUND: return "Mandatory Expansion Pak accessory was not found";
         case CART_LOAD_ERR_FUNCTION_NOT_SUPPORTED: return "Your flashcart doesn't support required functionality";
         default: return "Unknown error [CART_LOAD]";
@@ -108,13 +107,14 @@ cart_load_err_t cart_load_n64_rom_and_save (menu_t *menu, flashcart_progress_cal
         return CART_LOAD_ERR_ROM_LOAD_FAIL;
     }
 
-    path_ext_replace(path, "sav");
-    if (menu->settings.use_saves_folder) {
-        if ((save_type != FLASHCART_SAVE_TYPE_NONE) && create_saves_subdirectory(path)) {
+    path_t *save_path = save_folder_build_path(menu->storage_prefix, path, menu->settings.save_folder_mode);
+    path_free(path);
+    path = save_path;
+    if (menu->settings.save_folder_mode != SAVE_FOLDER_MODE_OFF) {
+        if ((save_type != FLASHCART_SAVE_TYPE_NONE) && create_save_directory(path)) {
             path_free(path);
-            return CART_LOAD_ERR_CREATE_SAVES_SUBDIR_FAIL;
+            return CART_LOAD_ERR_CREATE_SAVE_DIRECTORY_FAIL;
         }
-        path_push_subdir(path, SAVE_DIRECTORY_NAME);
     }
 
     menu->flashcart_err = flashcart_load_save(path_get(path), save_type);
@@ -126,6 +126,7 @@ cart_load_err_t cart_load_n64_rom_and_save (menu_t *menu, flashcart_progress_cal
 #ifndef FEATURE_AUTOLOAD_ROM_ENABLED
     if (menu->settings.rom_fast_reboot_enabled) {
         if (!flashcart_has_feature(FLASHCART_FEATURE_ROM_REBOOT_FAST)) {
+            path_free(path);
             return CART_LOAD_ERR_FUNCTION_NOT_SUPPORTED;
         }
         menu->flashcart_err = flashcart_set_next_boot_mode(FLASHCART_REBOOT_MODE_ROM);
@@ -280,13 +281,14 @@ cart_load_err_t cart_load_emulator (menu_t *menu, cart_load_emu_type_t emu_type,
         return CART_LOAD_ERR_EMU_ROM_LOAD_FAIL;
     }
 
-    path_ext_replace(path, "sav");
-    if (menu->settings.use_saves_folder) {
-        if ((save_type != FLASHCART_SAVE_TYPE_NONE) && create_saves_subdirectory(path)) {
+    path_t *save_path = save_folder_build_path(menu->storage_prefix, path, menu->settings.save_folder_mode);
+    path_free(path);
+    path = save_path;
+    if (menu->settings.save_folder_mode != SAVE_FOLDER_MODE_OFF) {
+        if ((save_type != FLASHCART_SAVE_TYPE_NONE) && create_save_directory(path)) {
             path_free(path);
-            return CART_LOAD_ERR_CREATE_SAVES_SUBDIR_FAIL;
+            return CART_LOAD_ERR_CREATE_SAVE_DIRECTORY_FAIL;
         }
-        path_push_subdir(path, SAVE_DIRECTORY_NAME);
     }
 
     menu->flashcart_err = flashcart_load_save(path_get(path), save_type);

@@ -7,6 +7,8 @@
 #ifndef SETTINGS_H__
 #define SETTINGS_H__
 
+#include "save_folder.h"
+
 
 /** @brief Settings Structure */
 typedef struct {
@@ -28,8 +30,8 @@ typedef struct {
     /** @brief Default directory to navigate to when menu loads */
     char *default_directory;
 
-    /** @brief Put saves into separate directory */
-    bool use_saves_folder;
+    /** @brief Select where ROM save files are stored */
+    save_folder_mode_t save_folder_mode;
 
     /** @brief Show saves folder in file browser */ 
     bool show_saves_folder;

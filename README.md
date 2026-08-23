@@ -82,6 +82,8 @@ Download the latest `sc64menu.n64` file from the [releases](https://github.com/P
 The features in this project were made possible by the [contributors](https://github.com/Polprzewodnikowy/N64FlashcartMenu/graphs/contributors).
 
 # License
+This repository contains an unofficial modified version of N64FlashcartMenu. See the [Modified Version Notice](MODIFICATIONS.md) for the modification date and summary.
+
 This project is released under the [GNU AFFERO GENERAL PUBLIC LICENSE](LICENSE.md) as compatible with all other dependent project licenses.  
 Other license options may be available upon request with permissions of the original `N64FlashcartMenu` project authors / maintainers.  
 * [Mateusz Faderewski / Polprzewodnikowy](https://github.com/Polprzewodnikowy)

@@ -27,7 +27,7 @@ static void set_protected_entries_type (menu_t *menu, void *arg) {
 }
 
 static void set_use_saves_folder_type (menu_t *menu, void *arg) {
-    menu->settings.use_saves_folder = (bool)(uintptr_t)(arg);
+    menu->settings.save_folder_mode = (save_folder_mode_t)(uintptr_t)(arg);
     settings_save(&menu->settings);
 }
 
@@ -173,14 +173,20 @@ static component_context_menu_t set_bgm_enabled_type_context_menu = {
 }};
 
 static int get_use_saves_folder_current_selection (menu_t *menu) {
-    return menu->settings.use_saves_folder ? 0 : 1;
+    switch (menu->settings.save_folder_mode) {
+        case SAVE_FOLDER_MODE_OFF: return 1;
+        case SAVE_FOLDER_MODE_ROOT: return 2;
+        case SAVE_FOLDER_MODE_LOCAL:
+        default: return 0;
+    }
 }
 
 static component_context_menu_t set_use_saves_folder_type_context_menu = {
     .get_default_selection = get_use_saves_folder_current_selection,
     .list = {
-        {.text = "On", .action = set_use_saves_folder_type, .arg = (void *)(uintptr_t)(true) },
-        {.text = "Off", .action = set_use_saves_folder_type, .arg = (void *)(uintptr_t)(false) },
+        {.text = "On", .action = set_use_saves_folder_type, .arg = (void *)(uintptr_t)(SAVE_FOLDER_MODE_LOCAL) },
+        {.text = "Off", .action = set_use_saves_folder_type, .arg = (void *)(uintptr_t)(SAVE_FOLDER_MODE_OFF) },
+        {.text = "Root", .action = set_use_saves_folder_type, .arg = (void *)(uintptr_t)(SAVE_FOLDER_MODE_ROOT) },
     COMPONENT_CONTEXT_MENU_LIST_END,
 }};
 
@@ -381,7 +387,7 @@ static void draw (menu_t *menu, surface_t *d) {
         format_switch(menu->settings.show_protected_entries),
         format_switch(menu->settings.soundfx_enabled),
         format_switch(menu->settings.bgm_enabled),
-        format_switch(menu->settings.use_saves_folder),
+        save_folder_mode_format(menu->settings.save_folder_mode),
         format_switch(menu->settings.show_saves_folder),
         format_switch(menu->settings.show_save_files),
         format_switch(menu->settings.show_cheat_files),

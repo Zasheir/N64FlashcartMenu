@@ -36,6 +36,7 @@ jobs:
           push: ${{ github.repository_owner == 'Polprzewodnikowy' && 'filter' || 'never' }}
           refFilterForPush: refs/heads/main
           runCmd: |
+            make -C tests test
             make all -j
         env:
           FLAGS: -DNDEBUG

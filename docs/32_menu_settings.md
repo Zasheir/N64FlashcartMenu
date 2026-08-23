@@ -48,9 +48,13 @@ ls -lO /path/to/file
 
 ### Use Save Folders
 
-Controls whether N64FlashcartMenu should use `/saves` folders to store ROM save data. This setting is ON by default.
-ON: ROM saves are saved in separate subfolders (called `\saves`, will create one `\saves` subfolder per folder).
-OFF: ROM saves are saved alongside the ROM file.
+Controls where N64FlashcartMenu stores ROM save data. This setting is ON by default.
+
+- **ON:** Saves are stored in a `saves` subfolder beside the ROM's folder. One `saves` subfolder is created per ROM folder.
+- **OFF:** Saves are stored alongside the ROM file.
+- **ROOT:** All saves are stored in `/saves` at the root of the storage device. ROMs with the same filename in different folders intentionally share the same root save file.
+
+Changing this setting does not move existing save files. Copy an existing save to the newly selected location before launching the game if you want to continue using it.
 
 ### Sound Effects
 

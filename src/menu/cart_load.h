@@ -40,8 +40,8 @@ typedef enum {
     CART_LOAD_ERR_EMU_LOAD_FAIL,
     /** @brief Failed to load the emulator ROM. */
     CART_LOAD_ERR_EMU_ROM_LOAD_FAIL,
-    /** @brief Failed to create the save sub-directory. */
-    CART_LOAD_ERR_CREATE_SAVES_SUBDIR_FAIL,
+    /** @brief Failed to create the save directory. */
+    CART_LOAD_ERR_CREATE_SAVE_DIRECTORY_FAIL,
     /** @brief There was not enough system memory available (expected an Expansion PAK). */
     CART_LOAD_ERR_EXP_PAK_NOT_FOUND,
     /** @brief An unexpected response. */
