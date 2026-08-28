@@ -193,7 +193,7 @@ void path_push (path_t *path, char *string) {
  */
 void path_push_subdir (path_t *path, char *string) {
     char *file = path_last_get(path);
-    char *tmp = alloca(strlen(file) + 1);
+    char tmp[strlen(file) + 1];
     strcpy(tmp, file);
     path_pop(path);
     path_push(path, string);
